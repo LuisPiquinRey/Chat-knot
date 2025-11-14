@@ -1,5 +1,5 @@
 using User.Domain.Abstractions;
-
+using User.Domain.Users.Events;
 namespace User.Domain.Users;
 
 public sealed class User : Entity
@@ -39,7 +39,7 @@ public sealed class User : Entity
             email,
             isAdmin,
             settings);
-
+        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
         return user;
     }
 }

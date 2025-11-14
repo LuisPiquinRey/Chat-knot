@@ -5,7 +5,7 @@ namespace User.Domain.Abstractions;
  * subscribers will be listening to this event to trigger certain
  * logic.
  */
-public interface IDomainEvents: INotification
+public interface IDomainEvent : INotification
 {
 
 }
