@@ -9,7 +9,7 @@ public sealed class User : Entity
         Username username,
         Password password,
         Email email,
-        IsAdmin isAdmin,
+        bool isAdmin,
         Settings settings) : base(id)
     {
         Username = username;
@@ -22,14 +22,14 @@ public sealed class User : Entity
     public Username Username { get; private set; }
     public Password Password { get; private set; }
     public Email Email { get; private set; }
-    public IsAdmin IsAdmin { get; private set; }
+    public bool IsAdmin { get; private set; }
     public Settings Settings { get; private set; }
 
     public static User Create(
         Username username,
         Password password,
         Email email,
-        IsAdmin isAdmin,
+        bool isAdmin,
         Settings settings)
     {
         var user = new User(
