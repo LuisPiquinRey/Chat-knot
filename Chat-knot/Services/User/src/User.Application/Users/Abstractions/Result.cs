@@ -31,9 +31,20 @@ public class Result<TValue> : Result
         _value = value;
     }
 
-    public TValue Value => IsSuccess
-        ? _value!
-        : throw new InvalidOperationException("Cannot access value of a failed result");
+    public TValue Value
+    {
+        get
+        {
+            if (IsSuccess)
+            {
+                return _value!;
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot access value of a failed result");
+            }
+        }
+    }
 }
 
 public record Error(string Code, string Message)

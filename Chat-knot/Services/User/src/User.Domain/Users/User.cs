@@ -1,45 +1,46 @@
-using User.Domain.Abstractions;
-using User.Domain.Users.Events;
-namespace User.Domain.Users;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using User.Domain.Users;
 
-public sealed class User : Entity
+namespace User.Infrastructure.Configurations
 {
-    private User(
-        Guid id,
-        Username username,
-        Password password,
-        Email email,
-        bool isAdmin,
-        Settings settings) : base(id)
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
-        Username = username;
-        Password = password;
-        Email = email;
-        IsAdmin = isAdmin;
-        Settings = settings;
-    }
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.HasKey(u => u.Id);
 
-    public Username Username { get; private set; }
-    public Password Password { get; private set; }
-    public Email Email { get; private set; }
-    public bool IsAdmin { get; private set; }
-    public Settings Settings { get; private set; }
+            builder.Property(u => u.Username)
+                   .HasConversion(
+                       v => v.Value,
+                       v => new Username(v)
+                   )
+                   .HasMaxLength(50)
+                   .IsRequired();
 
-    public static User Create(
-        Username username,
-        Password password,
-        Email email,
-        bool isAdmin,
-        Settings settings)
-    {
-        var user = new User(
-            Guid.NewGuid(),
-            username,
-            password,
-            email,
-            isAdmin,
-            settings);
-        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
-        return user;
+            builder.Property(u => u.Password)
+                   .HasConversion(
+                       v => v.Value,
+                       v => new Password(v)
+                   )
+                   .HasMaxLength(100)
+                   .IsRequired();
+
+            builder.Property(u => u.Email)
+                   .HasConversion(
+                       v => v.Value,
+                       v => new Email(v)
+                   )
+                   .HasMaxLength(200)
+                   .IsRequired();
+
+            builder.Property(u => u.IsAdmin)
+                   .IsRequired();
+
+            builder.OwnsOne(u => u.Settings, settings =>
+            {
+                settings.Property(s => s.Theme).HasMaxLength(20);
+            });
+        }
     }
 }
