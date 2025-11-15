@@ -1,4 +1,4 @@
-namespace User.Application.Users.Abstractions;
+namespace User.Domain.Abstractions;
 public class Result
 {
     public bool IsSuccess { get; }
